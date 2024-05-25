@@ -352,7 +352,7 @@ body {
 }
 
 .git-score {
-    width: 60%;
+    width: 70%;
 }
 
 .ngs-score {
@@ -363,8 +363,8 @@ body {
     width: 70%;
 }
 
-.snakemake-score {
-    width: 55%;
+.machine-learning-score {
+    width: 60%;
 }
 
 .nextflow-score {
