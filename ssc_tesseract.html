@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.52">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>SSC - Tesseract</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="walkthrough_files/libs/clipboard/clipboard.min.js"></script>
+<script src="walkthrough_files/libs/quarto-html/quarto.js"></script>
+<script src="walkthrough_files/libs/quarto-html/popper.min.js"></script>
+<script src="walkthrough_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="walkthrough_files/libs/quarto-html/anchor.min.js"></script>
+<link href="walkthrough_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="walkthrough_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="walkthrough_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="walkthrough_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="walkthrough_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#original-script" id="toc-original-script" class="nav-link active" data-scroll-target="#original-script">1. Original script</a></li>
+  <li><a href="#argument-psm-3" id="toc-argument-psm-3" class="nav-link" data-scroll-target="#argument-psm-3">2. Argument psm 3</a></li>
+  <li><a href="#string-interpolation-and-variable-naming" id="toc-string-interpolation-and-variable-naming" class="nav-link" data-scroll-target="#string-interpolation-and-variable-naming">3. String interpolation and variable naming</a></li>
+  <li><a href="#usage-of-lang-and-psm-args" id="toc-usage-of-lang-and-psm-args" class="nav-link" data-scroll-target="#usage-of-lang-and-psm-args">4. Usage of lang and psm args</a></li>
+  <li><a href="#argparser-outside-the-loop" id="toc-argparser-outside-the-loop" class="nav-link" data-scroll-target="#argparser-outside-the-loop">5. Argparser outside the loop</a></li>
+  <li><a href="#main-function-and-help-module" id="toc-main-function-and-help-module" class="nav-link" data-scroll-target="#main-function-and-help-module">6. Main function and help module</a></li>
+  <li><a href="#output-folder-and-summary" id="toc-output-folder-and-summary" class="nav-link" data-scroll-target="#output-folder-and-summary">7. Output folder and summary</a></li>
+  <li><a href="#final-script" id="toc-final-script" class="nav-link" data-scroll-target="#final-script">8. Final script</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">9. Summary</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">SSC - Tesseract</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="original-script" class="level2">
+<h2 class="anchored" data-anchor-id="original-script">1. Original script</h2>
+<p>consultation.py</p>
+<div id="c1174a3b" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> ctypes.wintypes <span class="im">import</span> PSMALL_RECT</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">from</span> distutils.command.config <span class="im">import</span> config</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> fileinput <span class="im">import</span> filename</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> ntpath <span class="im">import</span> join</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">from</span> tabnanny <span class="im">import</span> filename_only</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> urllib.parse <span class="im">import</span> SplitResult</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> AgglomerativeClustering</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> tabulate <span class="im">import</span> tabulate</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="im">import</span> pytesseract</span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="im">import</span> argparse</span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="im">import</span> imutils</span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="im">import</span> cv2</span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="im">import</span> os</span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="im">import</span> image <span class="im">as</span> im</span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="im">import</span> deep_translator</span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="im">from</span> wand.image <span class="im">import</span> Image <span class="im">as</span> WImage</span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="im">from</span> textblob <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="im">from</span> deep_translator <span class="im">import</span> (GoogleTranslator)</span>
+<span id="cb1-21"><a href="#cb1-21"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="bu">list</span> <span class="op">=</span> [<span class="st">"im1.jpg"</span>, <span class="st">"img2.jpg"</span>]</span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="cf">for</span> item <span class="kw">in</span> <span class="bu">list</span>:</span>
+<span id="cb1-24"><a href="#cb1-24"></a>    <span class="bu">print</span>(<span class="st">"Processing image </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(item))</span>
+<span id="cb1-25"><a href="#cb1-25"></a>    filenam <span class="op">=</span> item.rsplit(<span class="st">'.'</span>,<span class="dv">1</span>)[<span class="dv">1</span>]</span>
+<span id="cb1-26"><a href="#cb1-26"></a>    <span class="co">### Transform image from color to grayscale</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>    <span class="cf">with</span> WImage(filename<span class="op">=</span>item) <span class="im">as</span> img:</span>
+<span id="cb1-28"><a href="#cb1-28"></a>        img.transform_colorspace(<span class="st">'gray'</span>)</span>
+<span id="cb1-29"><a href="#cb1-29"></a>        img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb1-30"><a href="#cb1-30"></a>        offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb1-31"><a href="#cb1-31"></a>        img.save(filename<span class="op">=</span><span class="st">'gray_'</span><span class="op">+</span>item)   </span>
+<span id="cb1-32"><a href="#cb1-32"></a>    <span class="co"># </span><span class="al">###</span><span class="co"> Extract the text </span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>        ap <span class="op">=</span> argparse.ArgumentParser()</span>
+<span id="cb1-34"><a href="#cb1-34"></a>        ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image"</span>, default<span class="op">=</span><span class="st">'</span><span class="sc">{name}</span><span class="st">'</span>)</span>
+<span id="cb1-35"><a href="#cb1-35"></a>        ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">'path to the language'</span>, default<span class="op">=</span><span class="st">'eng'</span>)</span>
+<span id="cb1-36"><a href="#cb1-36"></a>        ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">str</span>, default<span class="op">=</span><span class="st">"en"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37"></a>        ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm 3"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">13</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode"</span>)</span>
+<span id="cb1-38"><a href="#cb1-38"></a>        args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb1-39"><a href="#cb1-39"></a>    <span class="co"># </span><span class="al">###</span><span class="co"> Set-up columns</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>        options <span class="op">=</span> <span class="st">"-l </span><span class="sc">{}</span><span class="st"> --psm 3 </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(args[<span class="st">"lang"</span>], args[<span class="st">"psm 3"</span>])</span>
+<span id="cb1-41"><a href="#cb1-41"></a>        name<span class="op">=</span><span class="st">'gray_'</span><span class="op">+</span>item</span>
+<span id="cb1-42"><a href="#cb1-42"></a>        text <span class="op">=</span> pytesseract.image_to_string(name)</span>
+<span id="cb1-43"><a href="#cb1-43"></a>    <span class="co"># </span><span class="al">###</span><span class="co"> Write-up original text</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>        outfile <span class="op">=</span> <span class="bu">open</span>(<span class="st">'gray_'</span><span class="op">+</span>item<span class="op">+</span><span class="st">'.txt'</span>, <span class="st">'w'</span>, encoding<span class="op">=</span><span class="st">'utf-8'</span>)</span>
+<span id="cb1-45"><a href="#cb1-45"></a>        outfile.write(text)</span>
+<span id="cb1-46"><a href="#cb1-46"></a>    <span class="co"># ## Write-up translated text</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>        translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">'auto'</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)    </span>
+<span id="cb1-48"><a href="#cb1-48"></a>        trans<span class="op">=</span><span class="bu">str</span>(translated)</span>
+<span id="cb1-49"><a href="#cb1-49"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="st">'gray_translated_'</span><span class="op">+</span>item<span class="op">+</span><span class="st">'.txt'</span>, <span class="st">'w'</span>, encoding<span class="op">=</span><span class="st">'utf-8'</span>) <span class="im">as</span> f:</span>
+<span id="cb1-50"><a href="#cb1-50"></a>            f.write(trans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Usage</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>python consultation.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Verbose Output</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Processing image im1.jpg</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Processing image img2.jpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Help module</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>python consultation.py -h</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Processing image im1.jpg</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>usage: consultation.py [-h] [-i IMAGE] [-l LANG] [-t TO] [-p PSM 3]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>options:</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  -h, --help            show this help message and exit</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  -i IMAGE, --image IMAGE</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                        path to the input image</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  -l LANG, --lang LANG  path to the language</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  -t TO, --to TO        eng</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  -p PSM 3, --psm 3 PSM 3</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                        Tesseract PSM mode</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>
+Files generated
+</summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>-rw-rw-r--  1 hemant hemant  63K Jun 30 15:34 gray_im1.jpg</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>-rw-rw-r--  1 hemant hemant   49 Jun 30 15:34 gray_translated_im1.jpg.txt</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>-rw-rw-r--  1 hemant hemant  23K Jun 30 15:34 gray_img2.jpg</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>-rw-rw-r--  1 hemant hemant   50 Jun 30 15:34 gray_im1.jpg.txt</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>-rw-rw-r--  1 hemant hemant   83 Jun 30 15:34 gray_translated_img2.jpg.txt</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>-rw-rw-r--  1 hemant hemant   84 Jun 30 15:34 gray_img2.jpg.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<details>
+<summary>
+Scope of improvements
+</summary>
+<details>
+<summary>
+<em>Major</em>
+</summary>
+<ul>
+<li>
+Appened the arguments - lang and psm in the pytesseract function
+</li>
+<li>
+Generated the main function, initiating argparser with variable check
+</li>
+<li>
+Generated functions like img_to_gray(img_name, img_name_gray, output_folder), google_translate(text, text_translated, args) etc
+</li>
+<li>
+Try Except used while reading file to avoid exception
+</li>
+<li>
+Providing img list as user input
+</li>
+<li>
+Formatted the help module with better output and user input checks
+</li>
+<li>
+Appended –out argument to provide output folder, cleaner results
+</li>
+<li>
+Generating summary.csv to provide comprehenisve results analysis
+</li>
+<li>
+Generated requirements.txt with all required packages with version
+</li>
+</ul>
+</details>
+<details>
+<summary>
+<em>Minor</em>
+</summary>
+<ul>
+<li>
+Removed unused libraries
+</li>
+<li>
+More intuitive variable naming
+</li>
+<li>
+Updated comments
+</li>
+<li>
+Using double quotation from both single and double
+</li>
+<li>
+File closing after completion
+</li>
+<li>
+String interpolation
+</li>
+<li>
+Updated rsplit to fetch filename
+</li>
+<li>
+Append text.strip() to make sure empty output is not printed
+</li>
+</ul>
+</details>
+</details>
+</section>
+<section id="argument-psm-3" class="level2">
+<h2 class="anchored" data-anchor-id="argument-psm-3">2. Argument psm 3</h2>
+<p>Update:</p>
+<ul>
+<li>Argument psm 3 correct to psm</li>
+<li>Mixed quotation type - changed to double quotation</li>
+</ul>
+<div id="a26efbe2" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="im">import</span> argparse</span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image <span class="im">as</span> WImage</span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> (GoogleTranslator)</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="bu">list</span> <span class="op">=</span> [<span class="st">"im1.jpg"</span>, <span class="st">"img2.jpg"</span>]</span>
+<span id="cb6-11"><a href="#cb6-11"></a></span>
+<span id="cb6-12"><a href="#cb6-12"></a></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="cf">for</span> item <span class="kw">in</span> <span class="bu">list</span>:</span>
+<span id="cb6-14"><a href="#cb6-14"></a>    <span class="bu">print</span>(<span class="st">"Processing image </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(item))</span>
+<span id="cb6-15"><a href="#cb6-15"></a>    filenam <span class="op">=</span> item.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">1</span>]</span>
+<span id="cb6-16"><a href="#cb6-16"></a>    <span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>    <span class="cf">with</span> WImage(filename<span class="op">=</span>item) <span class="im">as</span> img:</span>
+<span id="cb6-18"><a href="#cb6-18"></a>        img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb6-19"><a href="#cb6-19"></a>        img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb6-20"><a href="#cb6-20"></a>        offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb6-21"><a href="#cb6-21"></a>        img.save(filename<span class="op">=</span><span class="st">"gray_"</span><span class="op">+</span>item)   </span>
+<span id="cb6-22"><a href="#cb6-22"></a>    <span class="co"># Extract the text </span></span>
+<span id="cb6-23"><a href="#cb6-23"></a>        ap <span class="op">=</span> argparse.ArgumentParser()</span>
+<span id="cb6-24"><a href="#cb6-24"></a>        ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image"</span>, default<span class="op">=</span><span class="st">"</span><span class="sc">{name}</span><span class="st">"</span>)</span>
+<span id="cb6-25"><a href="#cb6-25"></a>        ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the language"</span>, default<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb6-26"><a href="#cb6-26"></a>        ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">str</span>, default<span class="op">=</span><span class="st">"en"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb6-27"><a href="#cb6-27"></a>        ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">13</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode"</span>)</span>
+<span id="cb6-28"><a href="#cb6-28"></a>        args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb6-29"><a href="#cb6-29"></a>    <span class="co"># Set-up columns</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>        options <span class="op">=</span> <span class="st">"-l </span><span class="sc">{}</span><span class="st"> --psm </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(args[<span class="st">"lang"</span>], args[<span class="st">"psm"</span>])</span>
+<span id="cb6-31"><a href="#cb6-31"></a>        name<span class="op">=</span><span class="st">"gray_"</span><span class="op">+</span>item</span>
+<span id="cb6-32"><a href="#cb6-32"></a>        text <span class="op">=</span> pytesseract.image_to_string(name)</span>
+<span id="cb6-33"><a href="#cb6-33"></a>    <span class="co"># Write-up original text</span></span>
+<span id="cb6-34"><a href="#cb6-34"></a>        outfile <span class="op">=</span> <span class="bu">open</span>(<span class="st">"gray_"</span><span class="op">+</span>item<span class="op">+</span><span class="st">".txt"</span>, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb6-35"><a href="#cb6-35"></a>        outfile.write(text)</span>
+<span id="cb6-36"><a href="#cb6-36"></a>    <span class="co"># Write-up translated text</span></span>
+<span id="cb6-37"><a href="#cb6-37"></a>        translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)    </span>
+<span id="cb6-38"><a href="#cb6-38"></a>        trans<span class="op">=</span><span class="bu">str</span>(translated)</span>
+<span id="cb6-39"><a href="#cb6-39"></a>        <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"gray_translated_"</span><span class="op">+</span>item<span class="op">+</span><span class="st">".txt"</span>, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb6-40"><a href="#cb6-40"></a>            f.write(trans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="string-interpolation-and-variable-naming" class="level2">
+<h2 class="anchored" data-anchor-id="string-interpolation-and-variable-naming">3. String interpolation and variable naming</h2>
+<p>Update:</p>
+<ul>
+<li>Updated comments</li>
+<li>from wand.image import Image and not Image as WImage since no Image variable clash is there</li>
+<li>updated .format() function with string interpolation wherever possible, ease of readability</li>
+<li>updated variable filenam to filename</li>
+<li>updated list with img_list and item with photo</li>
+<li>updated name to filename_gray</li>
+<li>creating all the variables at the start of loop for better usability</li>
+<li>removed paranthesis from GoogleTranslator</li>
+</ul>
+<div id="83935e1a" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="im">import</span> argparse</span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> GoogleTranslator</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a></span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a>img_list <span class="op">=</span> [<span class="st">"im1.jpg"</span>, <span class="st">"img2.jpg"</span>]</span>
+<span id="cb7-11"><a href="#cb7-11"></a></span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="cf">for</span> photo <span class="kw">in</span> img_list:</span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="bu">print</span>(<span class="ss">f"Processing image </span><span class="sc">{</span>photo<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15"></a></span>
+<span id="cb7-16"><a href="#cb7-16"></a>    <span class="co"># Declaring variables</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>    filename_original <span class="op">=</span> photo.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb7-18"><a href="#cb7-18"></a>    filename_gray <span class="op">=</span> <span class="st">"gray_"</span> <span class="op">+</span> photo</span>
+<span id="cb7-19"><a href="#cb7-19"></a>    text_en <span class="op">=</span> <span class="st">"gray_"</span><span class="op">+</span>filename_original<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>    text_trans <span class="op">=</span> <span class="st">"gray_translated_"</span><span class="op">+</span>filename_original<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a></span>
+<span id="cb7-22"><a href="#cb7-22"></a>    <span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a>    <span class="cf">with</span> Image(filename<span class="op">=</span>photo) <span class="im">as</span> img:</span>
+<span id="cb7-24"><a href="#cb7-24"></a>        img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb7-25"><a href="#cb7-25"></a>        img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb7-26"><a href="#cb7-26"></a>        offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb7-27"><a href="#cb7-27"></a>        img.save(filename<span class="op">=</span>filename_gray)   </span>
+<span id="cb7-28"><a href="#cb7-28"></a></span>
+<span id="cb7-29"><a href="#cb7-29"></a>    <span class="co"># Fetching the arguments</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a>        ap <span class="op">=</span> argparse.ArgumentParser()</span>
+<span id="cb7-31"><a href="#cb7-31"></a>        ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image"</span>, default<span class="op">=</span><span class="st">"</span><span class="sc">{name}</span><span class="st">"</span>)</span>
+<span id="cb7-32"><a href="#cb7-32"></a>        ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the language"</span>, default<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb7-33"><a href="#cb7-33"></a>        ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">str</span>, default<span class="op">=</span><span class="st">"en"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb7-34"><a href="#cb7-34"></a>        ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">13</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode"</span>)</span>
+<span id="cb7-35"><a href="#cb7-35"></a>        args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb7-36"><a href="#cb7-36"></a></span>
+<span id="cb7-37"><a href="#cb7-37"></a>    <span class="co"># Set-up columns</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a>        <span class="co"># options = "-l {} --psm {}".format(args["lang"], args["psm"])</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a></span>
+<span id="cb7-40"><a href="#cb7-40"></a>    <span class="co"># Extract the text </span></span>
+<span id="cb7-41"><a href="#cb7-41"></a>        text <span class="op">=</span> pytesseract.image_to_string(filename_gray)</span>
+<span id="cb7-42"><a href="#cb7-42"></a></span>
+<span id="cb7-43"><a href="#cb7-43"></a>    <span class="co"># Write-up original text</span></span>
+<span id="cb7-44"><a href="#cb7-44"></a>        outfile <span class="op">=</span> <span class="bu">open</span>(text_en, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb7-45"><a href="#cb7-45"></a>        outfile.write(text)</span>
+<span id="cb7-46"><a href="#cb7-46"></a></span>
+<span id="cb7-47"><a href="#cb7-47"></a>    <span class="co"># Write-up translated text</span></span>
+<span id="cb7-48"><a href="#cb7-48"></a>        translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)    </span>
+<span id="cb7-49"><a href="#cb7-49"></a>        trans<span class="op">=</span><span class="bu">str</span>(translated)</span>
+<span id="cb7-50"><a href="#cb7-50"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_trans, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb7-51"><a href="#cb7-51"></a>            f.write(trans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="usage-of-lang-and-psm-args" class="level2">
+<h2 class="anchored" data-anchor-id="usage-of-lang-and-psm-args">4. Usage of lang and psm args</h2>
+<p>Update:</p>
+<ul>
+<li>Appended the args -lang and psm in the pytesseract function, which were not used earlier</li>
+<li>appended file.close() or img.close() to close the opened files, thus saving memory</li>
+<li>removed str(translate) since output is of class str only</li>
+</ul>
+<div id="aa2cb327" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="im">import</span> argparse</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> GoogleTranslator</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a></span>
+<span id="cb8-10"><a href="#cb8-10"></a>img_list <span class="op">=</span> [<span class="st">"im1.jpg"</span>, <span class="st">"img2.jpg"</span>]</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="cf">for</span> photo <span class="kw">in</span> img_list:</span>
+<span id="cb8-14"><a href="#cb8-14"></a>    <span class="bu">print</span>(<span class="ss">f"Processing image </span><span class="sc">{</span>photo<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-15"><a href="#cb8-15"></a></span>
+<span id="cb8-16"><a href="#cb8-16"></a>    <span class="co"># Declaring variables</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a>    filename_original <span class="op">=</span> photo.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb8-18"><a href="#cb8-18"></a>    filename_gray <span class="op">=</span> <span class="st">"gray_"</span> <span class="op">+</span> photo</span>
+<span id="cb8-19"><a href="#cb8-19"></a>    text_en <span class="op">=</span> <span class="st">"gray_"</span><span class="op">+</span>filename_original<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a>    text_translated <span class="op">=</span> <span class="st">"gray_translated_"</span><span class="op">+</span>filename_original<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a></span>
+<span id="cb8-22"><a href="#cb8-22"></a>    <span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a>    <span class="cf">with</span> Image(filename<span class="op">=</span>photo) <span class="im">as</span> img:</span>
+<span id="cb8-24"><a href="#cb8-24"></a>        img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb8-25"><a href="#cb8-25"></a>        img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>,</span>
+<span id="cb8-26"><a href="#cb8-26"></a>        offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb8-27"><a href="#cb8-27"></a>        img.save(filename<span class="op">=</span>filename_gray)   </span>
+<span id="cb8-28"><a href="#cb8-28"></a></span>
+<span id="cb8-29"><a href="#cb8-29"></a>    <span class="co"># Fetching the arguments</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a>        ap <span class="op">=</span> argparse.ArgumentParser()</span>
+<span id="cb8-31"><a href="#cb8-31"></a>        ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image"</span>, default<span class="op">=</span><span class="st">"</span><span class="sc">{name}</span><span class="st">"</span>)</span>
+<span id="cb8-32"><a href="#cb8-32"></a>        ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the language"</span>, default<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb8-33"><a href="#cb8-33"></a>        ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">str</span>, default<span class="op">=</span><span class="st">"en"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb8-34"><a href="#cb8-34"></a>        ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">13</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode"</span>)</span>
+<span id="cb8-35"><a href="#cb8-35"></a>        args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb8-36"><a href="#cb8-36"></a>        args[<span class="st">"psm"</span>] <span class="op">=</span> <span class="st">"--psm "</span><span class="op">+</span><span class="bu">str</span>(args[<span class="st">"psm"</span>])</span>
+<span id="cb8-37"><a href="#cb8-37"></a></span>
+<span id="cb8-38"><a href="#cb8-38"></a>    <span class="co"># Set-up columns</span></span>
+<span id="cb8-39"><a href="#cb8-39"></a>        <span class="co"># options = "-l {} --psm {}".format(args["lang"], args["psm"])</span></span>
+<span id="cb8-40"><a href="#cb8-40"></a></span>
+<span id="cb8-41"><a href="#cb8-41"></a>    <span class="co"># Extract the text </span></span>
+<span id="cb8-42"><a href="#cb8-42"></a>        text <span class="op">=</span> pytesseract.image_to_string(filename_gray, lang<span class="op">=</span>args[<span class="st">"lang"</span>], config<span class="op">=</span>args[<span class="st">"psm"</span>])</span>
+<span id="cb8-43"><a href="#cb8-43"></a></span>
+<span id="cb8-44"><a href="#cb8-44"></a>    <span class="co"># Write-up original text</span></span>
+<span id="cb8-45"><a href="#cb8-45"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_en, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile:</span>
+<span id="cb8-46"><a href="#cb8-46"></a>            outfile.write(text)</span>
+<span id="cb8-47"><a href="#cb8-47"></a>            outfile.close()</span>
+<span id="cb8-48"><a href="#cb8-48"></a>            <span class="co"># outfile = open(text_en, "w", encoding="utf-8")</span></span>
+<span id="cb8-49"><a href="#cb8-49"></a>            <span class="co"># outfile.write(text)</span></span>
+<span id="cb8-50"><a href="#cb8-50"></a></span>
+<span id="cb8-51"><a href="#cb8-51"></a>    <span class="co"># Write-up translated text</span></span>
+<span id="cb8-52"><a href="#cb8-52"></a>        translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)   </span>
+<span id="cb8-53"><a href="#cb8-53"></a>        <span class="co"># print(type(translated)) </span></span>
+<span id="cb8-54"><a href="#cb8-54"></a>        <span class="co"># translated=str(translated)</span></span>
+<span id="cb8-55"><a href="#cb8-55"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_translated, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile_translated:</span>
+<span id="cb8-56"><a href="#cb8-56"></a>            outfile_translated.write(translated)</span>
+<span id="cb8-57"><a href="#cb8-57"></a>            outfile_translated.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="argparser-outside-the-loop" class="level2">
+<h2 class="anchored" data-anchor-id="argparser-outside-the-loop">5. Argparser outside the loop</h2>
+<p>Update:</p>
+<ul>
+<li>Moving out the argparser, since it will be initiated once only</li>
+<li>Updating variables img_name_base from filename_original and img_name_gray from filename_gray, img_name from photo</li>
+<li>making function img_to_gray with two arguments (img_name, img_name_gray)</li>
+<li>appened with try except for img_to_gray so as to avoid in between function break</li>
+<li>change psm default to 3 since giving good results for 3</li>
+<li>append text.strip() /// translated.strip() to make sure empty lines are not printed</li>
+</ul>
+<div id="21e821b9" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="im">import</span> argparse</span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> GoogleTranslator</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a></span>
+<span id="cb9-10"><a href="#cb9-10"></a>img_list <span class="op">=</span> [<span class="st">"im1.jpg"</span>, <span class="st">"hjk.mt"</span>, <span class="st">"img2.jpg"</span>]</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co"># Fetching the arguments</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a>ap <span class="op">=</span> argparse.ArgumentParser()</span>
+<span id="cb9-14"><a href="#cb9-14"></a>ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image"</span>, default<span class="op">=</span><span class="st">"</span><span class="sc">{name}</span><span class="st">"</span>)</span>
+<span id="cb9-15"><a href="#cb9-15"></a>ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the language"</span>, default<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb9-16"><a href="#cb9-16"></a>ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">str</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb9-17"><a href="#cb9-17"></a>ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">3</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode"</span>)</span>
+<span id="cb9-18"><a href="#cb9-18"></a>args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb9-19"><a href="#cb9-19"></a>args[<span class="st">"psm"</span>] <span class="op">=</span> <span class="st">"--psm "</span><span class="op">+</span><span class="bu">str</span>(args[<span class="st">"psm"</span>])</span>
+<span id="cb9-20"><a href="#cb9-20"></a></span>
+<span id="cb9-21"><a href="#cb9-21"></a><span class="kw">def</span> img_to_gray(img_name, img_name_gray):</span>
+<span id="cb9-22"><a href="#cb9-22"></a>    <span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb9-23"><a href="#cb9-23"></a>    <span class="cf">try</span>:</span>
+<span id="cb9-24"><a href="#cb9-24"></a>        <span class="cf">with</span> Image(filename<span class="op">=</span>img_name) <span class="im">as</span> img:</span>
+<span id="cb9-25"><a href="#cb9-25"></a>            img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb9-26"><a href="#cb9-26"></a>            img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>, offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb9-27"><a href="#cb9-27"></a>            img.save(filename<span class="op">=</span>img_name_gray)</span>
+<span id="cb9-28"><a href="#cb9-28"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb9-29"><a href="#cb9-29"></a>    <span class="cf">except</span>:</span>
+<span id="cb9-30"><a href="#cb9-30"></a>            <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb9-31"><a href="#cb9-31"></a>    </span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="kw">def</span> google_translate(text, text_translated):</span>
+<span id="cb9-33"><a href="#cb9-33"></a>    <span class="co"># Write-up translated text</span></span>
+<span id="cb9-34"><a href="#cb9-34"></a>    translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)</span>
+<span id="cb9-35"><a href="#cb9-35"></a>    <span class="co"># translated = str(translated)</span></span>
+<span id="cb9-36"><a href="#cb9-36"></a>    <span class="cf">if</span>(translated <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(translated.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb9-37"><a href="#cb9-37"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_translated, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile_translated:</span>
+<span id="cb9-38"><a href="#cb9-38"></a>            outfile_translated.write(translated)</span>
+<span id="cb9-39"><a href="#cb9-39"></a>            outfile_translated.close()</span>
+<span id="cb9-40"><a href="#cb9-40"></a>        <span class="bu">print</span>(<span class="ss">f"Writing translation </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-41"><a href="#cb9-41"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-42"><a href="#cb9-42"></a>        <span class="bu">print</span>(<span class="ss">f"No translation found </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-43"><a href="#cb9-43"></a></span>
+<span id="cb9-44"><a href="#cb9-44"></a></span>
+<span id="cb9-45"><a href="#cb9-45"></a><span class="cf">for</span> img_name <span class="kw">in</span> img_list:</span>
+<span id="cb9-46"><a href="#cb9-46"></a>    <span class="co"># Declaring variables</span></span>
+<span id="cb9-47"><a href="#cb9-47"></a>    img_name_base <span class="op">=</span> img_name.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb9-48"><a href="#cb9-48"></a>    img_name_gray <span class="op">=</span> <span class="st">"gray_"</span> <span class="op">+</span> img_name</span>
+<span id="cb9-49"><a href="#cb9-49"></a>    text_en <span class="op">=</span> <span class="st">"gray_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb9-50"><a href="#cb9-50"></a>    text_translated <span class="op">=</span> <span class="st">"gray_translated_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb9-51"><a href="#cb9-51"></a></span>
+<span id="cb9-52"><a href="#cb9-52"></a>    check <span class="op">=</span> img_to_gray(img_name, img_name_gray)</span>
+<span id="cb9-53"><a href="#cb9-53"></a>    </span>
+<span id="cb9-54"><a href="#cb9-54"></a></span>
+<span id="cb9-55"><a href="#cb9-55"></a>    <span class="cf">if</span>(check):</span>
+<span id="cb9-56"><a href="#cb9-56"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Processing image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-57"><a href="#cb9-57"></a>        <span class="co"># Extract the text </span></span>
+<span id="cb9-58"><a href="#cb9-58"></a>        text <span class="op">=</span> pytesseract.image_to_string(img_name_gray, lang<span class="op">=</span>args[<span class="st">"lang"</span>], config<span class="op">=</span>args[<span class="st">"psm"</span>])</span>
+<span id="cb9-59"><a href="#cb9-59"></a>        <span class="co"># print(len(text.strip()))</span></span>
+<span id="cb9-60"><a href="#cb9-60"></a></span>
+<span id="cb9-61"><a href="#cb9-61"></a>        <span class="cf">if</span>(text <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(text.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb9-62"><a href="#cb9-62"></a>            <span class="co"># Write-up original text</span></span>
+<span id="cb9-63"><a href="#cb9-63"></a>            <span class="cf">with</span> <span class="bu">open</span>(text_en, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile:</span>
+<span id="cb9-64"><a href="#cb9-64"></a>                outfile.write(text)</span>
+<span id="cb9-65"><a href="#cb9-65"></a>                outfile.close()</span>
+<span id="cb9-66"><a href="#cb9-66"></a>            </span>
+<span id="cb9-67"><a href="#cb9-67"></a>            <span class="bu">print</span>(<span class="ss">f"Writing text </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-68"><a href="#cb9-68"></a></span>
+<span id="cb9-69"><a href="#cb9-69"></a>            <span class="cf">if</span>(args[<span class="st">"to"</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
+<span id="cb9-70"><a href="#cb9-70"></a>                google_translate(text, text_translated)</span>
+<span id="cb9-71"><a href="#cb9-71"></a></span>
+<span id="cb9-72"><a href="#cb9-72"></a>        <span class="cf">else</span>:</span>
+<span id="cb9-73"><a href="#cb9-73"></a>            <span class="bu">print</span>(<span class="ss">f"No text captured </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-74"><a href="#cb9-74"></a></span>
+<span id="cb9-75"><a href="#cb9-75"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-76"><a href="#cb9-76"></a>         <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Not a valid image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss"> -- skipping"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="main-function-and-help-module" class="level2">
+<h2 class="anchored" data-anchor-id="main-function-and-help-module">6. Main function and help module</h2>
+<p>Update:</p>
+<ul>
+<li>Giving images as list</li>
+<li>Check for argparser initial</li>
+<li>appended description to describe the module</li>
+<li>expanding the help module and formatted it</li>
+<li>check for user argument, alongwith made –image argument as mandatory</li>
+</ul>
+<div id="f5aa1063" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="im">import</span> argparse</span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image</span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> GoogleTranslator</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a></span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="kw">def</span> img_to_gray(img_name, img_name_gray):</span>
+<span id="cb10-12"><a href="#cb10-12"></a>    <span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a>    <span class="cf">try</span>:</span>
+<span id="cb10-14"><a href="#cb10-14"></a>        <span class="cf">with</span> Image(filename<span class="op">=</span>img_name) <span class="im">as</span> img:</span>
+<span id="cb10-15"><a href="#cb10-15"></a>            img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb10-16"><a href="#cb10-16"></a>            img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>, offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb10-17"><a href="#cb10-17"></a>            img.save(filename<span class="op">=</span>img_name_gray)</span>
+<span id="cb10-18"><a href="#cb10-18"></a>            img.close()</span>
+<span id="cb10-19"><a href="#cb10-19"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a>    <span class="cf">except</span>:</span>
+<span id="cb10-21"><a href="#cb10-21"></a>            <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb10-22"><a href="#cb10-22"></a>    </span>
+<span id="cb10-23"><a href="#cb10-23"></a><span class="kw">def</span> google_translate(text, text_translated, img_name, args):</span>
+<span id="cb10-24"><a href="#cb10-24"></a>    <span class="co"># Write-up translated text</span></span>
+<span id="cb10-25"><a href="#cb10-25"></a>    translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)</span>
+<span id="cb10-26"><a href="#cb10-26"></a>    <span class="co"># translated = str(translated)</span></span>
+<span id="cb10-27"><a href="#cb10-27"></a>    <span class="cf">if</span>(translated <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(translated.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb10-28"><a href="#cb10-28"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_translated, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile_translated:</span>
+<span id="cb10-29"><a href="#cb10-29"></a>            outfile_translated.write(translated)</span>
+<span id="cb10-30"><a href="#cb10-30"></a>            outfile_translated.close()</span>
+<span id="cb10-31"><a href="#cb10-31"></a>        <span class="bu">print</span>(<span class="ss">f"Writing translation </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-32"><a href="#cb10-32"></a>    <span class="cf">else</span>:</span>
+<span id="cb10-33"><a href="#cb10-33"></a>        <span class="bu">print</span>(<span class="ss">f"No translation found </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-34"><a href="#cb10-34"></a></span>
+<span id="cb10-35"><a href="#cb10-35"></a></span>
+<span id="cb10-36"><a href="#cb10-36"></a><span class="kw">def</span> my_iterator(args):</span>
+<span id="cb10-37"><a href="#cb10-37"></a>    <span class="cf">for</span> img_name <span class="kw">in</span> args[<span class="st">"image"</span>]:</span>
+<span id="cb10-38"><a href="#cb10-38"></a>        <span class="co"># break</span></span>
+<span id="cb10-39"><a href="#cb10-39"></a>        <span class="co"># Declaring variables</span></span>
+<span id="cb10-40"><a href="#cb10-40"></a>        img_name_base <span class="op">=</span> img_name.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb10-41"><a href="#cb10-41"></a>        img_name_gray <span class="op">=</span> <span class="st">"gray_"</span> <span class="op">+</span> img_name</span>
+<span id="cb10-42"><a href="#cb10-42"></a>        text_en <span class="op">=</span> <span class="st">"gray_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb10-43"><a href="#cb10-43"></a>        text_translated <span class="op">=</span> <span class="st">"gray_translated_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb10-44"><a href="#cb10-44"></a></span>
+<span id="cb10-45"><a href="#cb10-45"></a>        check <span class="op">=</span> img_to_gray(img_name, img_name_gray)</span>
+<span id="cb10-46"><a href="#cb10-46"></a>        </span>
+<span id="cb10-47"><a href="#cb10-47"></a></span>
+<span id="cb10-48"><a href="#cb10-48"></a>        <span class="cf">if</span>(check):</span>
+<span id="cb10-49"><a href="#cb10-49"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Processing image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-50"><a href="#cb10-50"></a>            <span class="co"># Extract the text </span></span>
+<span id="cb10-51"><a href="#cb10-51"></a>            text <span class="op">=</span> pytesseract.image_to_string(img_name_gray, lang<span class="op">=</span>args[<span class="st">"lang"</span>], config<span class="op">=</span>args[<span class="st">"psm"</span>])</span>
+<span id="cb10-52"><a href="#cb10-52"></a></span>
+<span id="cb10-53"><a href="#cb10-53"></a>            <span class="cf">if</span>(text <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(text.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb10-54"><a href="#cb10-54"></a>                <span class="co"># Write-up original text</span></span>
+<span id="cb10-55"><a href="#cb10-55"></a>                <span class="cf">with</span> <span class="bu">open</span>(text_en, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile:</span>
+<span id="cb10-56"><a href="#cb10-56"></a>                    outfile.write(text)</span>
+<span id="cb10-57"><a href="#cb10-57"></a>                    outfile.close()</span>
+<span id="cb10-58"><a href="#cb10-58"></a>                </span>
+<span id="cb10-59"><a href="#cb10-59"></a>                <span class="bu">print</span>(<span class="ss">f"Writing text </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-60"><a href="#cb10-60"></a></span>
+<span id="cb10-61"><a href="#cb10-61"></a>                <span class="cf">if</span>(args[<span class="st">"to"</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
+<span id="cb10-62"><a href="#cb10-62"></a>                    google_translate(text, text_translated, img_name, args)</span>
+<span id="cb10-63"><a href="#cb10-63"></a></span>
+<span id="cb10-64"><a href="#cb10-64"></a>            <span class="cf">else</span>:</span>
+<span id="cb10-65"><a href="#cb10-65"></a>                <span class="bu">print</span>(<span class="ss">f"No text captured </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb10-66"><a href="#cb10-66"></a></span>
+<span id="cb10-67"><a href="#cb10-67"></a>        <span class="cf">else</span>:</span>
+<span id="cb10-68"><a href="#cb10-68"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Not a valid image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss"> -- skipping"</span>)</span>
+<span id="cb10-69"><a href="#cb10-69"></a></span>
+<span id="cb10-70"><a href="#cb10-70"></a></span>
+<span id="cb10-71"><a href="#cb10-71"></a></span>
+<span id="cb10-72"><a href="#cb10-72"></a><span class="kw">def</span> main():</span>
+<span id="cb10-73"><a href="#cb10-73"></a>    <span class="co"># Fetching the arguments</span></span>
+<span id="cb10-74"><a href="#cb10-74"></a>    ap <span class="op">=</span> argparse.ArgumentParser(description<span class="op">=</span><span class="st">"Python script to extract text from images after converting them to grayscale"</span>)</span>
+<span id="cb10-75"><a href="#cb10-75"></a>    <span class="co"># Reference https://stackoverflow.com/questions/43786174/how-to-pass-and-parse-a-list-of-strings-from-command-line-with-argparse-argument</span></span>
+<span id="cb10-76"><a href="#cb10-76"></a>    ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image"</span>, required<span class="op">=</span><span class="va">True</span>, nargs<span class="op">=</span><span class="st">'+'</span>, default<span class="op">=</span>[])</span>
+<span id="cb10-77"><a href="#cb10-77"></a>    ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"text language type (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>, default<span class="op">=</span><span class="st">"eng"</span>, choices<span class="op">=</span>pytesseract.get_languages(), metavar<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb10-78"><a href="#cb10-78"></a>    ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"language to translate the text"</span>, choices<span class="op">=</span><span class="bu">list</span>((GoogleTranslator().get_supported_languages(as_dict<span class="op">=</span><span class="va">True</span>)).values()), metavar<span class="op">=</span><span class="st">"de"</span>)</span>
+<span id="cb10-79"><a href="#cb10-79"></a>    ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">3</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode type (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>, choices<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">14</span>), metavar<span class="op">=</span><span class="st">"3"</span>)</span>
+<span id="cb10-80"><a href="#cb10-80"></a>    </span>
+<span id="cb10-81"><a href="#cb10-81"></a>    args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb10-82"><a href="#cb10-82"></a>    args[<span class="st">"psm"</span>] <span class="op">=</span> <span class="st">"--psm "</span><span class="op">+</span><span class="bu">str</span>(args[<span class="st">"psm"</span>])</span>
+<span id="cb10-83"><a href="#cb10-83"></a></span>
+<span id="cb10-84"><a href="#cb10-84"></a></span>
+<span id="cb10-85"><a href="#cb10-85"></a>    my_iterator(args)</span>
+<span id="cb10-86"><a href="#cb10-86"></a></span>
+<span id="cb10-87"><a href="#cb10-87"></a></span>
+<span id="cb10-88"><a href="#cb10-88"></a></span>
+<span id="cb10-89"><a href="#cb10-89"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb10-90"><a href="#cb10-90"></a>    main()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Usage</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>python image_to_text.py -i im1.jpg img2.jpg -t de</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Verbose Output</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Processing image im1.jpg</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Writing text im1.jpg</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Writing translation im1.jpg</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>Processing image img2.jpg</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>Writing text img2.jpg</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>Writing translation img2.jpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Help module</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>python image_to_text.py -h</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>usage: image_to_text.py [-h] -i IMAGE [IMAGE ...] [-l eng] [-t de] [-p 3]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>Python script to extract text from images after converting them to grayscale</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>options:</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  -h, --help            show this help message and exit</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  -i IMAGE [IMAGE ...], --image IMAGE [IMAGE ...]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                        path to the input image</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  -l eng, --lang eng    text language type (default: eng)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  -t de, --to de        language to translate the text</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  -p 3, --psm 3         Tesseract PSM mode type (default: 3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="output-folder-and-summary" class="level2">
+<h2 class="anchored" data-anchor-id="output-folder-and-summary">7. Output folder and summary</h2>
+<p>Update:</p>
+<ul>
+<li>Appened –output argument to provide the path of the output folder.</li>
+<li>Added code to write summary for the list of images provided, providing ease of reference</li>
+</ul>
+<div id="f7bbca35" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="im">import</span> argparse</span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image</span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> GoogleTranslator</span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="im">import</span> os</span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-8"><a href="#cb14-8"></a></span>
+<span id="cb14-9"><a href="#cb14-9"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a></span>
+<span id="cb14-11"><a href="#cb14-11"></a><span class="kw">def</span> img_to_gray(img_name, img_name_gray, output_folder):</span>
+<span id="cb14-12"><a href="#cb14-12"></a>    <span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a>    <span class="cf">try</span>:</span>
+<span id="cb14-14"><a href="#cb14-14"></a>        <span class="cf">with</span> Image(filename<span class="op">=</span>img_name) <span class="im">as</span> img:</span>
+<span id="cb14-15"><a href="#cb14-15"></a>            os.makedirs(output_folder)</span>
+<span id="cb14-16"><a href="#cb14-16"></a>            img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb14-17"><a href="#cb14-17"></a>            img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>, offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb14-18"><a href="#cb14-18"></a>            img.save(filename<span class="op">=</span>img_name_gray)</span>
+<span id="cb14-19"><a href="#cb14-19"></a>            img.close()</span>
+<span id="cb14-20"><a href="#cb14-20"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb14-21"><a href="#cb14-21"></a>    <span class="cf">except</span>:</span>
+<span id="cb14-22"><a href="#cb14-22"></a>            <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a>    </span>
+<span id="cb14-24"><a href="#cb14-24"></a><span class="kw">def</span> google_translate(text, text_translated, args):</span>
+<span id="cb14-25"><a href="#cb14-25"></a>    <span class="co"># Write-up translated text</span></span>
+<span id="cb14-26"><a href="#cb14-26"></a>    translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)</span>
+<span id="cb14-27"><a href="#cb14-27"></a>    <span class="co"># translated = str(translated)</span></span>
+<span id="cb14-28"><a href="#cb14-28"></a>    <span class="cf">if</span>(translated <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(translated.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb14-29"><a href="#cb14-29"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_translated, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile_translated:</span>
+<span id="cb14-30"><a href="#cb14-30"></a>            outfile_translated.write(translated)</span>
+<span id="cb14-31"><a href="#cb14-31"></a>            outfile_translated.close()</span>
+<span id="cb14-32"><a href="#cb14-32"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb14-33"><a href="#cb14-33"></a>        <span class="co"># print(f"Writing translation {img_name}")</span></span>
+<span id="cb14-34"><a href="#cb14-34"></a>    <span class="cf">else</span>:</span>
+<span id="cb14-35"><a href="#cb14-35"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb14-36"><a href="#cb14-36"></a>        <span class="co"># print(f"No translation found {img_name}")</span></span>
+<span id="cb14-37"><a href="#cb14-37"></a></span>
+<span id="cb14-38"><a href="#cb14-38"></a></span>
+<span id="cb14-39"><a href="#cb14-39"></a><span class="kw">def</span> my_iterator(args):</span>
+<span id="cb14-40"><a href="#cb14-40"></a>    summary_df <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">"file_path"</span>,<span class="st">"is_image"</span>,<span class="st">"gray_file_path"</span>,<span class="st">"text_in"</span>,<span class="st">"is_text_captured"</span>,<span class="st">"translated_in"</span>,<span class="st">"is_translation_success"</span>])</span>
+<span id="cb14-41"><a href="#cb14-41"></a>    <span class="cf">for</span> img_name <span class="kw">in</span> args[<span class="st">"image"</span>]:</span>
+<span id="cb14-42"><a href="#cb14-42"></a>        <span class="co"># break</span></span>
+<span id="cb14-43"><a href="#cb14-43"></a>        <span class="co"># Declaring variables</span></span>
+<span id="cb14-44"><a href="#cb14-44"></a>        img_name_base <span class="op">=</span> img_name.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb14-45"><a href="#cb14-45"></a></span>
+<span id="cb14-46"><a href="#cb14-46"></a>        output_folder <span class="op">=</span> args[<span class="st">"output"</span>] <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> img_name_base</span>
+<span id="cb14-47"><a href="#cb14-47"></a>        <span class="co"># os.makedirs(output_folder)</span></span>
+<span id="cb14-48"><a href="#cb14-48"></a></span>
+<span id="cb14-49"><a href="#cb14-49"></a>        img_name_gray <span class="op">=</span> output_folder <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"gray_"</span> <span class="op">+</span> img_name</span>
+<span id="cb14-50"><a href="#cb14-50"></a>        text_en <span class="op">=</span> output_folder <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"gray_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb14-51"><a href="#cb14-51"></a>        text_translated <span class="op">=</span> output_folder <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"gray_translated_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb14-52"><a href="#cb14-52"></a></span>
+<span id="cb14-53"><a href="#cb14-53"></a>        img_check <span class="op">=</span> img_to_gray(img_name, img_name_gray, output_folder)</span>
+<span id="cb14-54"><a href="#cb14-54"></a></span>
+<span id="cb14-55"><a href="#cb14-55"></a>        my_summary <span class="op">=</span> {<span class="st">"file_path"</span> : os.path.abspath(img_name), <span class="st">"is_image"</span> : <span class="va">None</span>, <span class="st">"gray_file_path"</span> : <span class="va">None</span>, <span class="st">"text_in"</span> : args[<span class="st">"lang"</span>], <span class="st">"is_text_captured"</span> : <span class="va">None</span>, <span class="st">"translated_in"</span> : <span class="va">None</span>, <span class="st">"is_translation_success"</span> : <span class="va">None</span>}</span>
+<span id="cb14-56"><a href="#cb14-56"></a>        </span>
+<span id="cb14-57"><a href="#cb14-57"></a></span>
+<span id="cb14-58"><a href="#cb14-58"></a>        <span class="cf">if</span>(img_check):</span>
+<span id="cb14-59"><a href="#cb14-59"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Processing image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-60"><a href="#cb14-60"></a>            my_summary[<span class="st">"is_image"</span>] <span class="op">=</span> <span class="st">"yes"</span></span>
+<span id="cb14-61"><a href="#cb14-61"></a>            my_summary[<span class="st">"gray_file_path"</span>] <span class="op">=</span> os.path.abspath(img_name_gray)</span>
+<span id="cb14-62"><a href="#cb14-62"></a>            <span class="co"># Extract the text </span></span>
+<span id="cb14-63"><a href="#cb14-63"></a>            text <span class="op">=</span> pytesseract.image_to_string(img_name_gray, lang<span class="op">=</span>args[<span class="st">"lang"</span>], config<span class="op">=</span>args[<span class="st">"psm"</span>])</span>
+<span id="cb14-64"><a href="#cb14-64"></a></span>
+<span id="cb14-65"><a href="#cb14-65"></a>            <span class="cf">if</span>(text <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(text.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb14-66"><a href="#cb14-66"></a>                my_summary[<span class="st">"is_text_captured"</span>] <span class="op">=</span> <span class="st">"yes"</span></span>
+<span id="cb14-67"><a href="#cb14-67"></a>                <span class="co"># Write-up original text</span></span>
+<span id="cb14-68"><a href="#cb14-68"></a>                <span class="cf">with</span> <span class="bu">open</span>(text_en, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile:</span>
+<span id="cb14-69"><a href="#cb14-69"></a>                    outfile.write(text)</span>
+<span id="cb14-70"><a href="#cb14-70"></a>                    outfile.close()</span>
+<span id="cb14-71"><a href="#cb14-71"></a>                </span>
+<span id="cb14-72"><a href="#cb14-72"></a>                <span class="bu">print</span>(<span class="ss">f"Writing text </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-73"><a href="#cb14-73"></a></span>
+<span id="cb14-74"><a href="#cb14-74"></a>                <span class="cf">if</span>(args[<span class="st">"to"</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
+<span id="cb14-75"><a href="#cb14-75"></a>                    my_summary[<span class="st">"translated_in"</span>] <span class="op">=</span> args[<span class="st">"to"</span>]</span>
+<span id="cb14-76"><a href="#cb14-76"></a>                    <span class="cf">if</span>(google_translate(text, text_translated, args)):</span>
+<span id="cb14-77"><a href="#cb14-77"></a>                        my_summary[<span class="st">"is_translation_success"</span>] <span class="op">=</span> <span class="st">"yes"</span></span>
+<span id="cb14-78"><a href="#cb14-78"></a>                        <span class="bu">print</span>(<span class="ss">f"Writing translation </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-79"><a href="#cb14-79"></a>                    <span class="cf">else</span>:</span>
+<span id="cb14-80"><a href="#cb14-80"></a>                        my_summary[<span class="st">"is_translation_success"</span>] <span class="op">=</span> <span class="st">"no"</span></span>
+<span id="cb14-81"><a href="#cb14-81"></a>                        <span class="bu">print</span>(<span class="ss">f"No translation found </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-82"><a href="#cb14-82"></a></span>
+<span id="cb14-83"><a href="#cb14-83"></a>            <span class="cf">else</span>:</span>
+<span id="cb14-84"><a href="#cb14-84"></a>                my_summary[<span class="st">"is_text_captured"</span>] <span class="op">=</span> <span class="st">"no"</span></span>
+<span id="cb14-85"><a href="#cb14-85"></a>                <span class="bu">print</span>(<span class="ss">f"No text captured </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-86"><a href="#cb14-86"></a></span>
+<span id="cb14-87"><a href="#cb14-87"></a>        <span class="cf">else</span>:</span>
+<span id="cb14-88"><a href="#cb14-88"></a>            my_summary[<span class="st">"is_image"</span>] <span class="op">=</span> <span class="st">"no"</span></span>
+<span id="cb14-89"><a href="#cb14-89"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Not a valid image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss"> -- skipping"</span>)</span>
+<span id="cb14-90"><a href="#cb14-90"></a></span>
+<span id="cb14-91"><a href="#cb14-91"></a>        </span>
+<span id="cb14-92"><a href="#cb14-92"></a>        summary_df <span class="op">=</span> pd.concat([summary_df, pd.DataFrame([my_summary])], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-93"><a href="#cb14-93"></a></span>
+<span id="cb14-94"><a href="#cb14-94"></a></span>
+<span id="cb14-95"><a href="#cb14-95"></a>    summary_df.to_csv(args[<span class="st">"output"</span>]<span class="op">+</span><span class="st">"/summary.csv"</span>)</span>
+<span id="cb14-96"><a href="#cb14-96"></a>    <span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">Hurray!!! finally completed</span><span class="ch">\n</span><span class="st">'</span>)</span>
+<span id="cb14-97"><a href="#cb14-97"></a></span>
+<span id="cb14-98"><a href="#cb14-98"></a></span>
+<span id="cb14-99"><a href="#cb14-99"></a><span class="kw">def</span> out_folder(args):</span>
+<span id="cb14-100"><a href="#cb14-100"></a>    path <span class="op">=</span> args[<span class="st">"output"</span>] <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"out"</span></span>
+<span id="cb14-101"><a href="#cb14-101"></a>    counter <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb14-102"><a href="#cb14-102"></a>    new_path <span class="op">=</span> path</span>
+<span id="cb14-103"><a href="#cb14-103"></a></span>
+<span id="cb14-104"><a href="#cb14-104"></a>    <span class="cf">while</span> os.path.isdir(new_path):</span>
+<span id="cb14-105"><a href="#cb14-105"></a>        new_path <span class="op">=</span> path <span class="op">+</span> <span class="st">"_"</span> <span class="op">+</span> <span class="bu">str</span>(counter)</span>
+<span id="cb14-106"><a href="#cb14-106"></a>        counter <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb14-107"><a href="#cb14-107"></a></span>
+<span id="cb14-108"><a href="#cb14-108"></a>    os.makedirs(new_path)</span>
+<span id="cb14-109"><a href="#cb14-109"></a></span>
+<span id="cb14-110"><a href="#cb14-110"></a>    <span class="cf">return</span> new_path</span>
+<span id="cb14-111"><a href="#cb14-111"></a></span>
+<span id="cb14-112"><a href="#cb14-112"></a></span>
+<span id="cb14-113"><a href="#cb14-113"></a><span class="kw">def</span> main():</span>
+<span id="cb14-114"><a href="#cb14-114"></a>    <span class="co"># Fetching the arguments</span></span>
+<span id="cb14-115"><a href="#cb14-115"></a>    ap <span class="op">=</span> argparse.ArgumentParser(description<span class="op">=</span><span class="st">"Python script to extract text from images after converting them to grayscale"</span>)</span>
+<span id="cb14-116"><a href="#cb14-116"></a>    <span class="co"># Reference https://stackoverflow.com/questions/43786174/how-to-pass-and-parse-a-list-of-strings-from-command-line-with-argparse-argument</span></span>
+<span id="cb14-117"><a href="#cb14-117"></a>    ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image/images --required"</span>, required<span class="op">=</span><span class="va">True</span>, nargs<span class="op">=</span><span class="st">'+'</span>, default<span class="op">=</span>[])</span>
+<span id="cb14-118"><a href="#cb14-118"></a>    <span class="co"># Tesseract language key:value -- https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html</span></span>
+<span id="cb14-119"><a href="#cb14-119"></a>    ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"text language type (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>, default<span class="op">=</span><span class="st">"eng"</span>, choices<span class="op">=</span>pytesseract.get_languages(), metavar<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb14-120"><a href="#cb14-120"></a>    ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"language to translate the text"</span>, choices<span class="op">=</span><span class="bu">list</span>((GoogleTranslator().get_supported_languages(as_dict<span class="op">=</span><span class="va">True</span>)).values()), metavar<span class="op">=</span><span class="st">"de"</span>)</span>
+<span id="cb14-121"><a href="#cb14-121"></a>    <span class="co"># PSM Choices and meaning -- https://stackoverflow.com/questions/44619077/pytesseract-ocr-multiple-config-options</span></span>
+<span id="cb14-122"><a href="#cb14-122"></a>    ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">3</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode type (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>, choices<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">14</span>), metavar<span class="op">=</span><span class="st">"3"</span>)</span>
+<span id="cb14-123"><a href="#cb14-123"></a>    ap.add_argument(<span class="st">"-o"</span>, <span class="st">"--output"</span>, default<span class="op">=</span>os.getcwd(), <span class="bu">help</span><span class="op">=</span><span class="st">"Output folder path (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>)</span>
+<span id="cb14-124"><a href="#cb14-124"></a>    </span>
+<span id="cb14-125"><a href="#cb14-125"></a>    args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb14-126"><a href="#cb14-126"></a>    args[<span class="st">"psm"</span>] <span class="op">=</span> <span class="st">"--psm "</span><span class="op">+</span><span class="bu">str</span>(args[<span class="st">"psm"</span>])</span>
+<span id="cb14-127"><a href="#cb14-127"></a>    args[<span class="st">"output"</span>] <span class="op">=</span> out_folder(args)</span>
+<span id="cb14-128"><a href="#cb14-128"></a>    </span>
+<span id="cb14-129"><a href="#cb14-129"></a>    my_iterator(args)</span>
+<span id="cb14-130"><a href="#cb14-130"></a></span>
+<span id="cb14-131"><a href="#cb14-131"></a></span>
+<span id="cb14-132"><a href="#cb14-132"></a></span>
+<span id="cb14-133"><a href="#cb14-133"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb14-134"><a href="#cb14-134"></a>    main()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="final-script" class="level2">
+<h2 class="anchored" data-anchor-id="final-script">8. Final script</h2>
+<p>Update:</p>
+<ul>
+<li>Cleaning (comments and final check)</li>
+</ul>
+<div id="16eb633e" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Importing libraries</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="im">import</span> pytesseract</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="im">import</span> argparse</span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="im">from</span> wand.image <span class="im">import</span> Image</span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="im">from</span> deep_translator <span class="im">import</span> GoogleTranslator</span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="im">import</span> os</span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb15-8"><a href="#cb15-8"></a></span>
+<span id="cb15-9"><a href="#cb15-9"></a>pytesseract.tesseract_cmd <span class="op">=</span> <span class="vs">r"tesseract"</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="co"># Transform image from color to grayscale</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="kw">def</span> img_to_gray(img_name, img_name_gray, output_folder):</span>
+<span id="cb15-13"><a href="#cb15-13"></a>    <span class="cf">try</span>:</span>
+<span id="cb15-14"><a href="#cb15-14"></a>        <span class="cf">with</span> Image(filename<span class="op">=</span>img_name) <span class="im">as</span> img:</span>
+<span id="cb15-15"><a href="#cb15-15"></a>            os.makedirs(output_folder)</span>
+<span id="cb15-16"><a href="#cb15-16"></a>            img.transform_colorspace(<span class="st">"gray"</span>)</span>
+<span id="cb15-17"><a href="#cb15-17"></a>            img.adaptive_threshold(width<span class="op">=</span><span class="dv">16</span>, height<span class="op">=</span><span class="dv">16</span>, offset<span class="op">=-</span><span class="fl">0.15</span> <span class="op">*</span> img.quantum_range)</span>
+<span id="cb15-18"><a href="#cb15-18"></a>            img.save(filename<span class="op">=</span>img_name_gray)</span>
+<span id="cb15-19"><a href="#cb15-19"></a>            img.close()</span>
+<span id="cb15-20"><a href="#cb15-20"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb15-21"><a href="#cb15-21"></a>    <span class="cf">except</span>:</span>
+<span id="cb15-22"><a href="#cb15-22"></a>            <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb15-23"><a href="#cb15-23"></a>    </span>
+<span id="cb15-24"><a href="#cb15-24"></a><span class="co"># Write-up translated text</span></span>
+<span id="cb15-25"><a href="#cb15-25"></a><span class="kw">def</span> google_translate(text, text_translated, args):</span>
+<span id="cb15-26"><a href="#cb15-26"></a>    translated<span class="op">=</span>GoogleTranslator(source<span class="op">=</span><span class="st">"auto"</span>, target<span class="op">=</span>args[<span class="st">"to"</span>]).translate(text)</span>
+<span id="cb15-27"><a href="#cb15-27"></a>    <span class="cf">if</span>(translated <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(translated.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb15-28"><a href="#cb15-28"></a>        <span class="cf">with</span> <span class="bu">open</span>(text_translated, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile_translated:</span>
+<span id="cb15-29"><a href="#cb15-29"></a>            outfile_translated.write(translated)</span>
+<span id="cb15-30"><a href="#cb15-30"></a>            outfile_translated.close()</span>
+<span id="cb15-31"><a href="#cb15-31"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb15-32"><a href="#cb15-32"></a>    <span class="cf">else</span>:</span>
+<span id="cb15-33"><a href="#cb15-33"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb15-34"><a href="#cb15-34"></a></span>
+<span id="cb15-35"><a href="#cb15-35"></a></span>
+<span id="cb15-36"><a href="#cb15-36"></a><span class="kw">def</span> my_iterator(args):</span>
+<span id="cb15-37"><a href="#cb15-37"></a>    summary_df <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">"file_path"</span>,<span class="st">"is_image"</span>,<span class="st">"gray_file_path"</span>,<span class="st">"text_in"</span>,<span class="st">"is_text_captured"</span>,<span class="st">"translated_in"</span>,<span class="st">"is_translation_success"</span>])</span>
+<span id="cb15-38"><a href="#cb15-38"></a>    <span class="cf">for</span> img_name <span class="kw">in</span> args[<span class="st">"image"</span>]:</span>
+<span id="cb15-39"><a href="#cb15-39"></a>        <span class="co"># Declaring variables</span></span>
+<span id="cb15-40"><a href="#cb15-40"></a>        img_name_base <span class="op">=</span> img_name.rsplit(<span class="st">"."</span>,<span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb15-41"><a href="#cb15-41"></a>        output_folder <span class="op">=</span> args[<span class="st">"output"</span>] <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> img_name_base</span>
+<span id="cb15-42"><a href="#cb15-42"></a>        img_name_gray <span class="op">=</span> output_folder <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"gray_"</span> <span class="op">+</span> img_name</span>
+<span id="cb15-43"><a href="#cb15-43"></a>        text_en <span class="op">=</span> output_folder <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"gray_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb15-44"><a href="#cb15-44"></a>        text_translated <span class="op">=</span> output_folder <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"gray_translated_"</span><span class="op">+</span>img_name_base<span class="op">+</span><span class="st">".txt"</span></span>
+<span id="cb15-45"><a href="#cb15-45"></a></span>
+<span id="cb15-46"><a href="#cb15-46"></a>        <span class="co"># check if file is valid image</span></span>
+<span id="cb15-47"><a href="#cb15-47"></a>        img_check <span class="op">=</span> img_to_gray(img_name, img_name_gray, output_folder)</span>
+<span id="cb15-48"><a href="#cb15-48"></a>        <span class="co"># appending metadata</span></span>
+<span id="cb15-49"><a href="#cb15-49"></a>        my_summary <span class="op">=</span> {<span class="st">"file_path"</span> : os.path.abspath(img_name), <span class="st">"is_image"</span> : <span class="va">None</span>, <span class="st">"gray_file_path"</span> : <span class="va">None</span>, <span class="st">"text_in"</span> : args[<span class="st">"lang"</span>], <span class="st">"is_text_captured"</span> : <span class="va">None</span>, <span class="st">"translated_in"</span> : <span class="va">None</span>, <span class="st">"is_translation_success"</span> : <span class="va">None</span>}</span>
+<span id="cb15-50"><a href="#cb15-50"></a>        </span>
+<span id="cb15-51"><a href="#cb15-51"></a></span>
+<span id="cb15-52"><a href="#cb15-52"></a>        <span class="cf">if</span>(img_check):</span>
+<span id="cb15-53"><a href="#cb15-53"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Processing image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-54"><a href="#cb15-54"></a>            <span class="co"># appending metadata</span></span>
+<span id="cb15-55"><a href="#cb15-55"></a>            my_summary[<span class="st">"is_image"</span>] <span class="op">=</span> <span class="st">"yes"</span></span>
+<span id="cb15-56"><a href="#cb15-56"></a>            my_summary[<span class="st">"gray_file_path"</span>] <span class="op">=</span> os.path.abspath(img_name_gray)</span>
+<span id="cb15-57"><a href="#cb15-57"></a></span>
+<span id="cb15-58"><a href="#cb15-58"></a>            <span class="co"># Extracting text </span></span>
+<span id="cb15-59"><a href="#cb15-59"></a>            text <span class="op">=</span> pytesseract.image_to_string(img_name_gray, lang<span class="op">=</span>args[<span class="st">"lang"</span>], config<span class="op">=</span>args[<span class="st">"psm"</span>])</span>
+<span id="cb15-60"><a href="#cb15-60"></a></span>
+<span id="cb15-61"><a href="#cb15-61"></a>            <span class="cf">if</span>(text <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(text.strip()) <span class="op">!=</span> <span class="dv">0</span>):</span>
+<span id="cb15-62"><a href="#cb15-62"></a>                my_summary[<span class="st">"is_text_captured"</span>] <span class="op">=</span> <span class="st">"yes"</span></span>
+<span id="cb15-63"><a href="#cb15-63"></a>                <span class="co"># Write-up original text</span></span>
+<span id="cb15-64"><a href="#cb15-64"></a>                <span class="cf">with</span> <span class="bu">open</span>(text_en, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> outfile:</span>
+<span id="cb15-65"><a href="#cb15-65"></a>                    outfile.write(text)</span>
+<span id="cb15-66"><a href="#cb15-66"></a>                    outfile.close()</span>
+<span id="cb15-67"><a href="#cb15-67"></a>                </span>
+<span id="cb15-68"><a href="#cb15-68"></a>                <span class="bu">print</span>(<span class="ss">f"Writing text </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-69"><a href="#cb15-69"></a>                </span>
+<span id="cb15-70"><a href="#cb15-70"></a>                <span class="co"># Text translation using google translator</span></span>
+<span id="cb15-71"><a href="#cb15-71"></a>                <span class="cf">if</span>(args[<span class="st">"to"</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
+<span id="cb15-72"><a href="#cb15-72"></a>                    my_summary[<span class="st">"translated_in"</span>] <span class="op">=</span> args[<span class="st">"to"</span>]</span>
+<span id="cb15-73"><a href="#cb15-73"></a>                    <span class="cf">if</span>(google_translate(text, text_translated, args)):</span>
+<span id="cb15-74"><a href="#cb15-74"></a>                        my_summary[<span class="st">"is_translation_success"</span>] <span class="op">=</span> <span class="st">"yes"</span></span>
+<span id="cb15-75"><a href="#cb15-75"></a>                        <span class="bu">print</span>(<span class="ss">f"Writing translation </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-76"><a href="#cb15-76"></a>                    <span class="cf">else</span>:</span>
+<span id="cb15-77"><a href="#cb15-77"></a>                        my_summary[<span class="st">"is_translation_success"</span>] <span class="op">=</span> <span class="st">"no"</span></span>
+<span id="cb15-78"><a href="#cb15-78"></a>                        <span class="bu">print</span>(<span class="ss">f"No translation found </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-79"><a href="#cb15-79"></a></span>
+<span id="cb15-80"><a href="#cb15-80"></a>            <span class="co"># No text found</span></span>
+<span id="cb15-81"><a href="#cb15-81"></a>            <span class="cf">else</span>:</span>
+<span id="cb15-82"><a href="#cb15-82"></a>                my_summary[<span class="st">"is_text_captured"</span>] <span class="op">=</span> <span class="st">"no"</span></span>
+<span id="cb15-83"><a href="#cb15-83"></a>                <span class="bu">print</span>(<span class="ss">f"No text captured </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-84"><a href="#cb15-84"></a></span>
+<span id="cb15-85"><a href="#cb15-85"></a>        <span class="co"># Not a valid image</span></span>
+<span id="cb15-86"><a href="#cb15-86"></a>        <span class="cf">else</span>:</span>
+<span id="cb15-87"><a href="#cb15-87"></a>            my_summary[<span class="st">"is_image"</span>] <span class="op">=</span> <span class="st">"no"</span></span>
+<span id="cb15-88"><a href="#cb15-88"></a>            <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Not a valid image </span><span class="sc">{</span>img_name<span class="sc">}</span><span class="ss"> -- skipping"</span>)</span>
+<span id="cb15-89"><a href="#cb15-89"></a></span>
+<span id="cb15-90"><a href="#cb15-90"></a>        </span>
+<span id="cb15-91"><a href="#cb15-91"></a>        summary_df <span class="op">=</span> pd.concat([summary_df, pd.DataFrame([my_summary])], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-92"><a href="#cb15-92"></a></span>
+<span id="cb15-93"><a href="#cb15-93"></a></span>
+<span id="cb15-94"><a href="#cb15-94"></a>    summary_df.to_csv(args[<span class="st">"output"</span>]<span class="op">+</span><span class="st">"/summary.csv"</span>)</span>
+<span id="cb15-95"><a href="#cb15-95"></a>    <span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">Completed</span><span class="ch">\n</span><span class="st">'</span>)</span>
+<span id="cb15-96"><a href="#cb15-96"></a></span>
+<span id="cb15-97"><a href="#cb15-97"></a><span class="co"># Creating main output folder</span></span>
+<span id="cb15-98"><a href="#cb15-98"></a><span class="kw">def</span> out_folder(args):</span>
+<span id="cb15-99"><a href="#cb15-99"></a>    path <span class="op">=</span> args[<span class="st">"output"</span>] <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> <span class="st">"out"</span></span>
+<span id="cb15-100"><a href="#cb15-100"></a>    counter <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb15-101"><a href="#cb15-101"></a>    new_path <span class="op">=</span> path</span>
+<span id="cb15-102"><a href="#cb15-102"></a></span>
+<span id="cb15-103"><a href="#cb15-103"></a>    <span class="cf">while</span> os.path.isdir(new_path):</span>
+<span id="cb15-104"><a href="#cb15-104"></a>        new_path <span class="op">=</span> path <span class="op">+</span> <span class="st">"_"</span> <span class="op">+</span> <span class="bu">str</span>(counter)</span>
+<span id="cb15-105"><a href="#cb15-105"></a>        counter <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb15-106"><a href="#cb15-106"></a></span>
+<span id="cb15-107"><a href="#cb15-107"></a>    os.makedirs(new_path)</span>
+<span id="cb15-108"><a href="#cb15-108"></a></span>
+<span id="cb15-109"><a href="#cb15-109"></a>    <span class="cf">return</span> new_path</span>
+<span id="cb15-110"><a href="#cb15-110"></a></span>
+<span id="cb15-111"><a href="#cb15-111"></a></span>
+<span id="cb15-112"><a href="#cb15-112"></a><span class="kw">def</span> main():</span>
+<span id="cb15-113"><a href="#cb15-113"></a>    <span class="co"># Fetching the arguments</span></span>
+<span id="cb15-114"><a href="#cb15-114"></a>    ap <span class="op">=</span> argparse.ArgumentParser(description<span class="op">=</span><span class="st">"Python script to extract text from images after converting them to grayscale"</span>)</span>
+<span id="cb15-115"><a href="#cb15-115"></a>    <span class="co"># Reference https://stackoverflow.com/questions/43786174/how-to-pass-and-parse-a-list-of-strings-from-command-line-with-argparse-argument</span></span>
+<span id="cb15-116"><a href="#cb15-116"></a>    ap.add_argument(<span class="st">"-i"</span>, <span class="st">"--image"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"path to the input image/images --required"</span>, required<span class="op">=</span><span class="va">True</span>, nargs<span class="op">=</span><span class="st">'+'</span>, default<span class="op">=</span>[])</span>
+<span id="cb15-117"><a href="#cb15-117"></a>    <span class="co"># Tesseract language key:value -- https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html</span></span>
+<span id="cb15-118"><a href="#cb15-118"></a>    ap.add_argument(<span class="st">"-l"</span>, <span class="st">"--lang"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"text language type (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>, default<span class="op">=</span><span class="st">"eng"</span>, choices<span class="op">=</span>pytesseract.get_languages(), metavar<span class="op">=</span><span class="st">"eng"</span>)</span>
+<span id="cb15-119"><a href="#cb15-119"></a>    ap.add_argument(<span class="st">"-t"</span>, <span class="st">"--to"</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"language to translate the text"</span>, choices<span class="op">=</span><span class="bu">list</span>((GoogleTranslator().get_supported_languages(as_dict<span class="op">=</span><span class="va">True</span>)).values()), metavar<span class="op">=</span><span class="st">"de"</span>)</span>
+<span id="cb15-120"><a href="#cb15-120"></a>    <span class="co"># PSM Choices and meaning -- https://stackoverflow.com/questions/44619077/pytesseract-ocr-multiple-config-options</span></span>
+<span id="cb15-121"><a href="#cb15-121"></a>    ap.add_argument(<span class="st">"-p"</span>, <span class="st">"--psm"</span>, <span class="bu">type</span><span class="op">=</span><span class="bu">int</span>, default<span class="op">=</span><span class="dv">3</span>, <span class="bu">help</span><span class="op">=</span><span class="st">"Tesseract PSM mode type (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>, choices<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">14</span>), metavar<span class="op">=</span><span class="st">"3"</span>)</span>
+<span id="cb15-122"><a href="#cb15-122"></a>    ap.add_argument(<span class="st">"-o"</span>, <span class="st">"--output"</span>, default<span class="op">=</span>os.getcwd(), <span class="bu">help</span><span class="op">=</span><span class="st">"Output folder path (default: </span><span class="sc">%(default)s</span><span class="st">)"</span>)</span>
+<span id="cb15-123"><a href="#cb15-123"></a>    </span>
+<span id="cb15-124"><a href="#cb15-124"></a>    args <span class="op">=</span> <span class="bu">vars</span>(ap.parse_args())</span>
+<span id="cb15-125"><a href="#cb15-125"></a>    args[<span class="st">"psm"</span>] <span class="op">=</span> <span class="st">"--psm "</span><span class="op">+</span><span class="bu">str</span>(args[<span class="st">"psm"</span>])</span>
+<span id="cb15-126"><a href="#cb15-126"></a>    args[<span class="st">"output"</span>] <span class="op">=</span> out_folder(args)</span>
+<span id="cb15-127"><a href="#cb15-127"></a>    </span>
+<span id="cb15-128"><a href="#cb15-128"></a>    my_iterator(args)</span>
+<span id="cb15-129"><a href="#cb15-129"></a></span>
+<span id="cb15-130"><a href="#cb15-130"></a></span>
+<span id="cb15-131"><a href="#cb15-131"></a></span>
+<span id="cb15-132"><a href="#cb15-132"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">"__main__"</span>:</span>
+<span id="cb15-133"><a href="#cb15-133"></a>    main()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Usage</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>python image_to_text.py -i img2.jpg im1.jpg mrt.wer 01_test.ipynb -o my_output -l eng -t de -p 3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Verbose Output</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>Processing image img2.jpg</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>Writing text img2.jpg</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>Writing translation img2.jpg</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>Processing image im1.jpg</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>Writing text im1.jpg</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>Writing translation im1.jpg</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>Not a valid image mrt.wer -- skipping</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>Not a valid image 01_test.ipynb -- skipping</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>Completed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Help module</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>python image_to_text.py -h</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>usage: image_to_text.py [-h] -i IMAGE [IMAGE ...] [-l eng] [-t de] [-p 3]</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>Python script to extract text from images after converting them to grayscale</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>options:</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  -h, --help            show this help message and exit</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  -i IMAGE [IMAGE ...], --image IMAGE [IMAGE ...]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                        path to the input image/images --required</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  -l eng, --lang eng    text language type (default: eng)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  -t de, --to de        language to translate the text</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  -p 3, --psm 3         Tesseract PSM mode type (default: 3)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  -o OUTPUT, --output OUTPUT</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>                        Output folder path (default:</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                        /home/hemant/Downloads/sample_python_script)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>
+Files generated
+</summary>
+<div class="sourceCode" id="cb19"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>find my_output/out</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>my_output/out</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>my_output/out/summary.csv</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>my_output/out/im1</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>my_output/out/im1/gray_im1.jpg</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>my_output/out/im1/gray_translated_im1.txt</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>my_output/out/im1/gray_im1.txt</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>my_output/out/img2</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>my_output/out/img2/gray_img2.jpg</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>my_output/out/img2/gray_translated_img2.txt</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>my_output/out/img2/gray_img2.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<details>
+<summary>
+summary.csv file
+</summary>
+<table class="caption-top table">
+<caption>summary.csv table</caption>
+<colgroup>
+<col style="width: 1%">
+<col style="width: 26%">
+<col style="width: 4%">
+<col style="width: 36%">
+<col style="width: 4%">
+<col style="width: 8%">
+<col style="width: 6%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>file_path</th>
+<th>is_image</th>
+<th>gray_file_path</th>
+<th>text_in</th>
+<th>is_text_captured</th>
+<th>translated_in</th>
+<th>is_translation_success</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>/home/hemant/Downloads/sample_python_script/img2.jpg</td>
+<td>yes</td>
+<td>/home/hemant/Downloads/sample_python_script/my_output/out/img2/gray_img2.jpg</td>
+<td>eng</td>
+<td>yes</td>
+<td>de</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>/home/hemant/Downloads/sample_python_script/im1.jpg</td>
+<td>yes</td>
+<td>/home/hemant/Downloads/sample_python_script/my_output/out/im1/gray_im1.jpg</td>
+<td>eng</td>
+<td>yes</td>
+<td>de</td>
+<td>yes</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>/home/hemant/Downloads/sample_python_script/mrt.wer</td>
+<td>no</td>
+<td></td>
+<td>eng</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>/home/hemant/Downloads/sample_python_script/01_test.ipynb</td>
+<td>no</td>
+<td></td>
+<td>eng</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</details>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">9. Summary</h2>
+<details open="">
+<summary>
+Scope of improvements
+</summary>
+<details>
+<summary>
+<em>Major changes</em>
+</summary>
+<ul>
+<li>
+Appened the arguments - lang and psm in the pytesseract function
+</li>
+<li>
+Generated the main function, initiating argparser with variable check
+</li>
+<li>
+Generated functions like img_to_gray(img_name, img_name_gray, output_folder), google_translate(text, text_translated, args) etc
+</li>
+<li>
+Try Except used while reading file to avoid exception
+</li>
+<li>
+Providing img list as user input
+</li>
+<li>
+Formatted the help module with better output and user input checks
+</li>
+<li>
+Appended –out argument to provide output folder, cleaner results
+</li>
+<li>
+Generating summary.csv to provide comprehenisve results analysis
+</li>
+<li>
+Generated requirements.txt with all required packages with version
+</li>
+</ul>
+</details>
+<details>
+<summary>
+<em>Minor changes</em>
+</summary>
+<ul>
+<li>
+Removed unused libraries
+</li>
+<li>
+More intuitive variable naming
+</li>
+<li>
+Updated comments
+</li>
+<li>
+Using double quotation from both single and double
+</li>
+<li>
+File closing after completion
+</li>
+<li>
+String interpolation
+</li>
+<li>
+Updated rsplit to fetch filename
+</li>
+<li>
+Append text.strip() to make sure empty output is not printed
+</li>
+</ul>
+</details>
+<details>
+<summary>
+<em>Other changes</em>
+</summary>
+<ul>
+<li>
+Removed str(translated) text output from GoogleTranslator as it is already of class string
+</li>
+<li>
+Updated psm default value to 3 since giving good results
+</li>
+<li>
+Updated import wand.image import Image to only Image
+</li>
+<li>
+Removing the paranthesis from (GoogleTranslator)
+</li>
+</ul>
+</details>
+<details>
+<summary>
+<em>Further enhancements</em>
+</summary>
+<ul>
+<li>
+Argument such as –verbose may be provided to allow user to have the printed outputs or not
+</li>
+<li>
+Percentage completion bar to depict the overall progess may be provided
+</li>
+</ul>
+</details>
+</details>
+<p><a href="https://github.com/hemantjoon/ssc_tesseract" class="external" target="_blank">Github repo</a></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
